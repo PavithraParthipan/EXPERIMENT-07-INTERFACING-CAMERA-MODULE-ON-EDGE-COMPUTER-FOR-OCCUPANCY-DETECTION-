@@ -53,9 +53,124 @@ Write the Python code to initialize the camera and implement the HOG algorithm.
 Run the code and verify that the system detects human presence and draws bounding boxes.
 
  ###  Python Code:
- 
-import cv2
+```import cv2
 import imutils
+
+# ==========================================
+# Android DroidCam URL
+# ==========================================
+
+# Replace with your Android phone IP
+url = "http://172.17.146.17:4747/video"
+
+# Open video stream
+cap = cv2.VideoCapture(url)
+
+
+# ==========================================
+# Initialize HOG Person Detector
+# ==========================================
+
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+
+# ==========================================
+# Main Loop
+# ==========================================
+
+while True:
+
+# Read frame
+	ret, frame = cap.read()
+
+	if not ret:
+		print("Failed to receive frame")
+		break
+
+# Resize frame
+	frame = imutils.resize(frame, width=640)
+
+# ==========================================
+# Detect People
+# ==========================================
+
+	rects, weights = hog.detectMultiScale(
+		frame,
+		winStride=(4, 4),
+		padding=(8, 8),
+		scale=1.05
+	)
+
+	person_count = 0
+
+# Draw rectangles
+	for (x, y, w, h) in rects:
+
+		person_count += 1
+		cv2.rectangle(
+			frame,
+			(x, y),
+			(x + w, y + h),
+			(0, 255, 0),
+			2
+	)
+		cv2.putText(
+			frame,
+			"Person",
+			(x, y - 10),
+			cv2.FONT_HERSHEY_SIMPLEX,
+			0.5,
+			(0, 255, 0),
+			2
+		)
+
+# ==========================================
+# Occupancy Status
+# ==========================================
+
+	if person_count > 0:
+		status = "OCCUPIED"
+		color = (0, 0, 255)
+	else:
+		status = "EMPTY"
+		color = (255, 0, 0)
+
+	cv2.putText(
+		frame,
+		f"Status : {status}",
+		(20, 40),
+		cv2.FONT_HERSHEY_SIMPLEX,
+		0.8,
+		color,
+		2
+	)
+	cv2.putText(
+		frame,
+		f"Persons : {person_count}",
+		(20, 80),
+		cv2.FONT_HERSHEY_SIMPLEX,
+		0.8,
+		(255, 255, 0),
+		2
+	)
+
+# ==========================================
+# Show Output
+# ==========================================
+
+	cv2.imshow("Android Occupancy Detection", frame)
+
+# Press q to exit
+	if cv2.waitKey(1) & 0xFF == ord('q'):
+		break
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+cap.release()
+cv2.destroyAllWindows()
+```
 
 ###  Initialize HOG descriptor with people detector
 hog = cv2.HOGDescriptor()
