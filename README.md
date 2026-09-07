@@ -1,6 +1,8 @@
 # EXPERIMENT-07-INTERFACING-CAMERA-MODULE-ON-EDGE-COMPUTER-FOR-OCCUPANCY-DETECTION-
 
-
+## Name: Pavithra P
+## REG NO: 212223110035
+## DATE: 02.09.2026
 ### AIM:
 To interface a USB/CSI camera module with an edge computing platform (e.g., Raspberry Pi, Jetson Nano, etc.) and implement an occupancy detection system using the Histogram of Oriented Gradients (HOG) algorithm.
 
